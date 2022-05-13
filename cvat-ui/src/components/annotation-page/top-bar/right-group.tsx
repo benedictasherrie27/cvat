@@ -159,14 +159,14 @@ function RightGroup(props: Props): JSX.Element {
                 <Icon component={InfoIcon} />
                 Info
             </Button>
-            <Button
+            {/* <Button
                 type='link'
                 className={`cvat-annotation-header-button ${filters.length ? 'filters-armed' : ''}`}
                 onClick={showFilters}
             >
                 <Icon component={FilterIcon} />
                 Filters
-            </Button>
+            </Button> */}
             <div>
                 <Select
                     dropdownClassName='cvat-workspace-selector-dropdown'

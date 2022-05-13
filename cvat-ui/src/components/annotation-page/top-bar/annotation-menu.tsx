@@ -192,7 +192,7 @@ function AnnotationMenuComponent(props: Props & RouteComponentProps): JSX.Elemen
 
     return (
         <Menu onClick={(params: MenuInfo) => onClickMenuWrapper(params)} className='cvat-annotation-menu' selectable={false}>
-            {LoadSubmenu({
+            {/* {LoadSubmenu({
                 loaders,
                 loadActivity,
                 onFileUpload: (format: string, file: File): void => {
@@ -214,10 +214,10 @@ function AnnotationMenuComponent(props: Props & RouteComponentProps): JSX.Elemen
                 },
                 menuKey: Actions.LOAD_JOB_ANNO,
                 taskDimension: jobInstance.dimension,
-            })}
+            })} */}
             <Menu.Item key={Actions.EXPORT_TASK_DATASET}>Export task dataset</Menu.Item>
-            <Menu.Item key={Actions.REMOVE_ANNO}>Remove annotations</Menu.Item>
-            <Menu.Item key={Actions.OPEN_TASK}>
+            {/* <Menu.Item key={Actions.REMOVE_ANNO}>Remove annotations</Menu.Item> */}
+            {/* <Menu.Item key={Actions.OPEN_TASK}>
                 <a
                     href={`/tasks/${taskID}`}
                     onClick={(e: React.MouseEvent) => {
@@ -228,7 +228,7 @@ function AnnotationMenuComponent(props: Props & RouteComponentProps): JSX.Elemen
                 >
                     Open the task
                 </a>
-            </Menu.Item>
+            </Menu.Item> */}
             <Menu.SubMenu popupClassName='cvat-annotation-menu-job-state-submenu' key='job-state-submenu' title='Change job state'>
                 <Menu.Item key={`state:${JobState.NEW}`}>
                     <Text className={computeClassName(JobState.NEW)}>{JobState.NEW}</Text>

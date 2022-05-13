@@ -124,7 +124,7 @@ const defaultState: AnnotationState = {
         annotationAmount: 0,
         mediaAmount: 0,
     },
-    workspace: Workspace.STANDARD,
+    workspace: Workspace.TAG_ANNOTATION,
 };
 
 export default (state = defaultState, action: AnyAction): AnnotationState => {
@@ -157,7 +157,7 @@ export default (state = defaultState, action: AnyAction): AnnotationState => {
             } = action.payload;
 
             const isReview = job.stage === JobStage.REVIEW;
-            let workspaceSelected = Workspace.STANDARD;
+            let workspaceSelected = Workspace.TAG_ANNOTATION;
             let activeShapeType = ShapeType.RECTANGLE;
 
             if (job.dimension === DimensionType.DIM_3D) {

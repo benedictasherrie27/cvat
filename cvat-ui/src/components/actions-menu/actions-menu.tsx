@@ -79,7 +79,7 @@ function ActionsMenuComponent(props: Props): JSX.Element {
 
     return (
         <Menu selectable={false} className='cvat-actions-menu' onClick={onClickMenuWrapper}>
-            {LoadSubmenu({
+            {/* {LoadSubmenu({
                 loaders,
                 loadActivity,
                 onFileUpload: (format: string, file: File): void => {
@@ -101,10 +101,10 @@ function ActionsMenuComponent(props: Props): JSX.Element {
                 },
                 menuKey: Actions.LOAD_TASK_ANNO,
                 taskDimension,
-            })}
+            })} */}
             <Menu.Item key={Actions.EXPORT_TASK_DATASET}>Export task dataset</Menu.Item>
             {!!bugTracker && <Menu.Item key={Actions.OPEN_BUG_TRACKER}>Open bug tracker</Menu.Item>}
-            <Menu.Item disabled={inferenceIsActive} key={Actions.RUN_AUTO_ANNOTATION}>
+            {/* <Menu.Item disabled={inferenceIsActive} key={Actions.RUN_AUTO_ANNOTATION}>
                 Automatic annotation
             </Menu.Item>
             <Menu.Item
@@ -115,7 +115,7 @@ function ActionsMenuComponent(props: Props): JSX.Element {
                 Backup Task
             </Menu.Item>
             <Menu.Divider />
-            <Menu.Item key={Actions.MOVE_TASK_TO_PROJECT}>Move to project</Menu.Item>
+            <Menu.Item key={Actions.MOVE_TASK_TO_PROJECT}>Move to project</Menu.Item> */}
             <Menu.Item key={Actions.DELETE_TASK}>Delete</Menu.Item>
         </Menu>
     );
