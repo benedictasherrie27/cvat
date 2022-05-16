@@ -4,7 +4,7 @@ ARG http_proxy
 ARG https_proxy
 ARG no_proxy="nuclio,${no_proxy}"
 ARG socks_proxy
-ARG DJANGO_CONFIGURATION="production"
+ARG DJANGO_CONFIGURATION="custom"
 
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get --no-install-recommends install -yq \
@@ -68,7 +68,7 @@ ENV TERM=xterm \
     TZ=${TZ}
 
 ARG USER="django"
-ARG DJANGO_CONFIGURATION="production"
+ARG DJANGO_CONFIGURATION="custom"
 ENV DJANGO_CONFIGURATION=${DJANGO_CONFIGURATION}
 
 # Install necessary apt packages

@@ -1,3 +1,4 @@
 -r base.txt
 exif
 DateTime
+Jinja2 >2.7
