@@ -1,5 +1,6 @@
 ### Custom Export Format for WSP Ecology Team
 
+from asyncore import write
 from tempfile import TemporaryDirectory, TemporaryFile
 
 import os
@@ -42,6 +43,7 @@ import boto3
 #             f.write(frame_data.getvalue())
 
 def get_img_metadata(img_name):
+
     s3 = boto3.resource('s3', region_name='ap-southeast-2')
     bucket = s3.Bucket('animal-crossing')
     obj = bucket.Object(img_name)
@@ -62,18 +64,25 @@ def write_to_csv(f, task_data):
     # iterate over all frames
     for frame_annotation in task_data.group_by_frame():
         #get frame info
-        image_name = frame_annotation.name
-        capture_date, capture_time = get_img_metadata(image_name)
+        image_path = frame_annotation.name
+        project = image_path.split('/')[0]
+        camera = image_path.split('/')[1]
+        image_name = image_path.split('/')[-1]
+        capture_date, capture_time = get_img_metadata(image_path)
+
+        f.write(project+','+camera+','+image_name+','+str(capture_date)+','+str(capture_time)+'\n')
+    f.close()
 
 
 
-def _export_task(dst_file, task_data, anno_callback, save_images=False):
+def _export_task(dst_file, task_data, save_images=False):
     with TemporaryDirectory() as temp_dir:
         with open(osp.join(temp_dir, 'annotations.csv'), 'wb') as f:
-            dump_task_anno(f, task_data, anno_callback)
+            f.write('Project name,Camera name,Image name,Date,Time/n,\n')
+            write_to_csv(f, task_data)
 
-        if save_images:
-            dump_media_files(task_data, osp.join(temp_dir, 'images'))
+        #if save_images:
+        #   dump_media_files(task_data, osp.join(temp_dir, 'images'))
 
         make_zip_archive(temp_dir, dst_file)
 
@@ -92,11 +101,12 @@ def _export_task(dst_file, task_data, anno_callback, save_images=False):
 #         make_zip_archive(temp_dir, dst_file)
 
 
-@exporter(name='CVAT for images', ext='ZIP', version='1.1')
+@exporter(name='TEST FORMAT', ext='ZIP', version='1.0')
 def _export_images(dst_file, instance_data, save_images=False):
     if isinstance(instance_data, TaskData):
-        _export_task(dst_file, instance_data,
-            anno_callback=dump_as_cvat_annotation, save_images=save_images)
+        _export_task(dst_file, instance_data,save_images=save_images)
+
     # else:
     #     _export_project(dst_file, instance_data,
     #         anno_callback=dump_as_cvat_annotation, save_images=save_images)
+
