@@ -190,7 +190,7 @@ export default function ResourceFilterHOC(
         const predefinedFilters = getPredefinedFilters(user);
         return (
             <div className='cvat-resource-page-filters'>
-                <Dropdown
+                {/* <Dropdown
                     destroyPopupOnHide
                     visible={predefinedVisible}
                     placement='bottomLeft'
@@ -233,8 +233,8 @@ export default function ResourceFilterHOC(
                             <FilterFilled /> :
                             <FilterOutlined />}
                     </Button>
-                </Dropdown>
-                <Dropdown
+                </Dropdown> */}
+                {/* <Dropdown
                     placement='bottomRight'
                     visible={builderVisible}
                     destroyPopupOnHide
@@ -341,15 +341,15 @@ export default function ResourceFilterHOC(
                             <FilterFilled /> :
                             <FilterOutlined />}
                     </Button>
-                </Dropdown>
-                <Button
+                </Dropdown> */}
+                {/* <Button
                     disabled={!(appliedFilter.built || appliedFilter.predefined || appliedFilter.recent)}
                     size='small'
                     type='link'
                     onClick={() => { setAppliedFilter({ ...defaultAppliedFilter }); }}
                 >
                     Clear filters
-                </Button>
+                </Button> */}
             </div>
         );
     }

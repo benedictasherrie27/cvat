@@ -49,7 +49,7 @@ export default function BugTrackerEditorComponent(props: Props): JSX.Element {
         return (
             <Row className='cvat-issue-tracker'>
                 <Col>
-                    <Text strong className='cvat-text-color'>
+                    {/* <Text strong className='cvat-text-color'>
                         Issue Tracker
                     </Text>
                     <br />
@@ -67,7 +67,7 @@ export default function BugTrackerEditorComponent(props: Props): JSX.Element {
                         className='cvat-open-bug-tracker-button'
                     >
                         Open the issue
-                    </Button>
+                    </Button> */}
                 </Col>
             </Row>
         );
@@ -76,7 +76,7 @@ export default function BugTrackerEditorComponent(props: Props): JSX.Element {
     return (
         <Row className='cvat-issue-tracker'>
             <Col>
-                <Text strong className='cvat-text-color'>
+                {/* <Text strong className='cvat-text-color'>
                     Issue Tracker
                 </Text>
                 <br />
@@ -88,7 +88,7 @@ export default function BugTrackerEditorComponent(props: Props): JSX.Element {
                     }}
                 >
                     {bugTrackerEditing ? '' : 'Not specified'}
-                </Text>
+                </Text> */}
             </Col>
         </Row>
     );

@@ -205,7 +205,7 @@ export default class LabelsEditor extends React.PureComponent<LabelsEditorProps,
                 type='card'
                 tabBarStyle={{ marginBottom: '0px' }}
             >
-                <Tabs.TabPane
+                {/* <Tabs.TabPane
                     tab={(
                         <span>
                             <EditOutlined />
@@ -215,7 +215,7 @@ export default class LabelsEditor extends React.PureComponent<LabelsEditorProps,
                     key='1'
                 >
                     <RawViewer labels={[...savedLabels, ...unsavedLabels]} onSubmit={this.handleRawSubmit} />
-                </Tabs.TabPane>
+                </Tabs.TabPane> */}
 
                 <Tabs.TabPane
                     tab={(

@@ -225,9 +225,9 @@ export default class DetailsComponent extends React.PureComponent<Props, State> 
 
         return (
             <Descriptions className='cvat-task-parameters' bordered layout='vertical' size='small'>
-                <Descriptions.Item label='Overlap size'>{overlap}</Descriptions.Item>
+                {/* <Descriptions.Item label='Overlap size'>{overlap}</Descriptions.Item>
                 <Descriptions.Item label='Segment size'>{segmentSize}</Descriptions.Item>
-                <Descriptions.Item label='Image quality'>{imageQuality}</Descriptions.Item>
+                <Descriptions.Item label='Image quality'>{imageQuality}</Descriptions.Item> */}
             </Descriptions>
         );
     }
@@ -377,10 +377,10 @@ export default class DetailsComponent extends React.PureComponent<Props, State> 
         return (
             <Row>
                 <Col span={24}>
-                    <Text className='cvat-text-color'>Subset:</Text>
+                    {/* <Text className='cvat-text-color'>Subset:</Text> */}
                 </Col>
                 <Col span={24}>
-                    <ProjectSubsetField
+                    {/* <ProjectSubsetField
                         value={subset}
                         projectId={taskInstance.projectId}
                         projectSubsets={projectSubsets}
@@ -394,7 +394,7 @@ export default class DetailsComponent extends React.PureComponent<Props, State> 
                                 onTaskUpdate(taskInstance);
                             }
                         }}
-                    />
+                    /> */}
                 </Col>
             </Row>
         );
