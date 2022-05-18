@@ -45,9 +45,9 @@ def write_to_csv_task(f, task_data):
         project = image_path.split('/')[0]
         camera = image_path.split('/')[1]
         image_name = image_path.split('/')[-1]
-#       capture_date, capture_time = get_img_metadata(image_path)
-        f.write(project+','+camera+','+image_name+','+'1'+','+'2'+'\n')
-        #f.write(project+','+camera+','+image_name+','+str(capture_date)+','+str(capture_time)+'\n')
+        capture_date, capture_time = get_img_metadata(image_path)
+
+        f.write(project+','+camera+','+image_name+','+str(capture_date)+','+str(capture_time)+'\n')
 
     f.close()
 
@@ -69,7 +69,7 @@ def write_to_csv_task(f, task_data):
 def _export_task(dst_file, task_data, save_images=False):
     with TemporaryDirectory() as temp_dir:
         with open(osp.join(temp_dir, 'annotations.csv'), 'w') as f:
-            #f.write('Project name,Camera name,Image name,Date,Time,\n')
+            f.write('Project name,Camera name,Image name,Date,Time,\n')
             write_to_csv_task(f, task_data)
 
         make_zip_archive(temp_dir, dst_file)
