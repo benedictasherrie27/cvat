@@ -21,7 +21,12 @@ import boto3
 
 
 def get_img_metadata(img_name):
-    s3 = boto3.resource('s3', region_name='ap-southeast-2')
+    s3 = boto3.resource('s3',
+        aws_access_key_id = 'ASIAQLIFRFG3CH4AISVZ',
+        aws_secret_access_key='1Ch9zEuVj0vZFo4csHLoUX9DMu8Vq90HaXQP8VUL',
+        aws_session_token='FwoGZXIvYXdzEBsaDFJvJCWsURoYNMaBCyKGAYO9EstjvcrVgZvXRepndVHN+DwOWDNNLeoKN9WgAuWgBceJ+HjwFLk0I3LqJeeNpSEJ8JUM96UYWuPh9f7HMHtP/AxsWl9pxvyHBfbDzskx6rTRYO/gzQZMNKKkN9KxEbWHZYV4B/OFQr3uyzD/66h7uh7KPaKKOpjPQNpDzrOkiq1jfJA4KMiwlpQGMii/VdQ8c5qNBXOBq2vWlikY8Yjss7WVeE0e+6XnkF/jHmYWaKlwJz6y',
+        region_name = 'ap-southeast-2')
+
     bucket = s3.Bucket('animal-crossing')
     obj = bucket.Object(img_name)
     body = obj.get()['Body']
@@ -46,8 +51,10 @@ def write_to_csv_task(f, task_data):
         camera = image_path.split('/')[1]
         image_name = image_path.split('/')[-1]
         capture_date, capture_time = get_img_metadata(image_path)
+        for shape in frame_annotation.labeled_shapes:
+            label = shape.label
 
-        f.write(project+','+camera+','+image_name+','+str(capture_date)+','+str(capture_time)+'\n')
+        f.write(project+','+camera+','+image_name+','+str(capture_date)+','+str(capture_time)+','+label+'\n')
 
     f.close()
 
@@ -69,7 +76,7 @@ def write_to_csv_task(f, task_data):
 def _export_task(dst_file, task_data, save_images=False):
     with TemporaryDirectory() as temp_dir:
         with open(osp.join(temp_dir, 'annotations.csv'), 'w') as f:
-            f.write('Project name,Camera name,Image name,Date,Time,\n')
+            f.write('Project name,Camera name,Image name,Date,Time,Label,\n')
             write_to_csv_task(f, task_data)
 
         make_zip_archive(temp_dir, dst_file)
