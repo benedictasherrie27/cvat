@@ -51,10 +51,9 @@ def write_to_csv_task(f, task_data):
         camera = image_path.split('/')[1]
         image_name = image_path.split('/')[-1]
         capture_date, capture_time = get_img_metadata(image_path)
-        for shape in frame_annotation.labeled_shapes:
-            label = shape.label
+        for tags in frame_annotation.tags:
+            label = tags.label
             f.write(project+','+camera+','+image_name+','+str(capture_date)+','+str(capture_time)+','+label+'\n')
-
     f.close()
 
 # def write_to_csv_project(f, project_data): # need to be changed!!!!! -> might need a project list
