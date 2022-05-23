@@ -54,7 +54,7 @@ def write_to_csv_task(f, task_data):
         for shape in frame_annotation.labeled_shapes:
             label = shape.label
 
-        f.write(project+','+camera+','+image_name+','+str(capture_date)+','+str(capture_time)+','+label+'\n')
+            f.write(project+','+camera+','+image_name+','+str(capture_date)+','+str(capture_time)+','+label+'\n')
 
     f.close()
 
