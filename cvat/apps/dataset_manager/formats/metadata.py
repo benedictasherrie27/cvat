@@ -22,9 +22,9 @@ import boto3
 
 def get_img_metadata(img_name):
     s3 = boto3.resource('s3',
-        aws_access_key_id = 'ASIAQLIFRFG3CH4AISVZ',
-        aws_secret_access_key='1Ch9zEuVj0vZFo4csHLoUX9DMu8Vq90HaXQP8VUL',
-        aws_session_token='FwoGZXIvYXdzEBsaDFJvJCWsURoYNMaBCyKGAYO9EstjvcrVgZvXRepndVHN+DwOWDNNLeoKN9WgAuWgBceJ+HjwFLk0I3LqJeeNpSEJ8JUM96UYWuPh9f7HMHtP/AxsWl9pxvyHBfbDzskx6rTRYO/gzQZMNKKkN9KxEbWHZYV4B/OFQr3uyzD/66h7uh7KPaKKOpjPQNpDzrOkiq1jfJA4KMiwlpQGMii/VdQ8c5qNBXOBq2vWlikY8Yjss7WVeE0e+6XnkF/jHmYWaKlwJz6y',
+        aws_access_key_id = 'ASIAQLIFRFG3BZXETV7B',
+        aws_secret_access_key='4WLBE9+5X3zER8/q3d5lPlWJKLOalTUPYaE16VuF',
+        aws_session_token='FwoGZXIvYXdzEHsaDGRJxvcTOZRxKkFeZyKGAXxI2P2tUNCcqlULCOINeMA0pqmlgW0tMIwr7Z2/dRfa9mhBelkwdBq+4KMyZnqLt0XQqnA/R0I6UvXWi2EJOQ/U2hvXnS4qaRIHWFjFlClqE2XcWqXNCWxhvfXqgfXD03cotbVDu8WSPMIQebAjLs0mgOlh4nqWszP7FQqfUTTfso0ZZxNsKO/Bq5QGMihb+i5kv9VA7RkFzmzlIDj+BzR1tVImXAVf8CWHhoE0uKdsNPxd+FpS',
         region_name = 'ap-southeast-2')
 
     bucket = s3.Bucket('animal-crossing')
@@ -53,7 +53,6 @@ def write_to_csv_task(f, task_data):
         capture_date, capture_time = get_img_metadata(image_path)
         for shape in frame_annotation.labeled_shapes:
             label = shape.label
-
             f.write(project+','+camera+','+image_name+','+str(capture_date)+','+str(capture_time)+','+label+'\n')
 
     f.close()
