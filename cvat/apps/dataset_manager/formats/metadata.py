@@ -18,16 +18,22 @@ from .registry import dm_env, exporter, importer
 from exif import Image
 import datetime
 import boto3
-
+from botocore.handlers import disable_signing
 
 def get_img_metadata(img_name):
-    s3 = boto3.resource('s3',
-        aws_access_key_id = 'ASIAQLIFRFG3BZXETV7B',
-        aws_secret_access_key='4WLBE9+5X3zER8/q3d5lPlWJKLOalTUPYaE16VuF',
-        aws_session_token='FwoGZXIvYXdzEHsaDGRJxvcTOZRxKkFeZyKGAXxI2P2tUNCcqlULCOINeMA0pqmlgW0tMIwr7Z2/dRfa9mhBelkwdBq+4KMyZnqLt0XQqnA/R0I6UvXWi2EJOQ/U2hvXnS4qaRIHWFjFlClqE2XcWqXNCWxhvfXqgfXD03cotbVDu8WSPMIQebAjLs0mgOlh4nqWszP7FQqfUTTfso0ZZxNsKO/Bq5QGMihb+i5kv9VA7RkFzmzlIDj+BzR1tVImXAVf8CWHhoE0uKdsNPxd+FpS',
-        region_name = 'ap-southeast-2')
+    region = 'ap-southeast-2'
+    s3 = boto3.resource('s3', region_name=region)
+    s3.meta.client.meta.events.register('choose-signer.s3.*', disable_signing)
+    client_s3 = s3.meta.client
 
-    bucket = s3.Bucket('animal-crossing')
+    # s3 = boto3.resource('s3',
+    #     aws_access_key_id = 'ASIAQLIFRFG3BZXETV7B',
+    #     aws_secret_access_key='4WLBE9+5X3zER8/q3d5lPlWJKLOalTUPYaE16VuF',
+    #     aws_session_token='FwoGZXIvYXdzEHsaDGRJxvcTOZRxKkFeZyKGAXxI2P2tUNCcqlULCOINeMA0pqmlgW0tMIwr7Z2/dRfa9mhBelkwdBq+4KMyZnqLt0XQqnA/R0I6UvXWi2EJOQ/U2hvXnS4qaRIHWFjFlClqE2XcWqXNCWxhvfXqgfXD03cotbVDu8WSPMIQebAjLs0mgOlh4nqWszP7FQqfUTTfso0ZZxNsKO/Bq5QGMihb+i5kv9VA7RkFzmzlIDj+BzR1tVImXAVf8CWHhoE0uKdsNPxd+FpS',
+    #     region_name = 'ap-southeast-2')
+
+    bucket_name = 'animal-crossing'
+    bucket = s3.Bucket(bucket_name)
     obj = bucket.Object(img_name)
     body = obj.get()['Body']
     img = Image(body)
@@ -45,7 +51,6 @@ def get_img_metadata(img_name):
 def write_to_csv_task(f, task_data):
     # iterate over all frames
     for frame_annotation in task_data.group_by_frame():
-        #get frame info
         image_path = frame_annotation.name
         project = image_path.split('/')[0]
         camera = image_path.split('/')[1]
@@ -56,43 +61,42 @@ def write_to_csv_task(f, task_data):
             f.write(project+','+camera+','+image_name+','+str(capture_date)+','+str(capture_time)+','+label+'\n')
     f.close()
 
-# def write_to_csv_project(f, project_data): # need to be changed!!!!! -> might need a project list
-#     # iterate over all frames
-#     for frame_annotation in project_data.group_by_frame():
-#         #get frame info
-#         image_path = frame_annotation.name
-
-#         project = image_path.split('/')[0]
-#         camera = image_path.split('/')[1]
-#         image_name = image_path.split('/')[-1]
-#         capture_date, capture_time = get_img_metadata(image_path)
-
-#         f.write(project+','+camera+','+image_name+','+str(capture_date)+','+str(capture_time)+'\n')
-#     f.close()
+def write_to_csv_project(f, project_data):
+    # iterate over all frames
+    for frame_annotation in project_data.group_by_frame():
+        image_path = frame_annotation.name
+        project = image_path.split('/')[0]
+        camera = image_path.split('/')[1]
+        image_name = image_path.split('/')[-1]
+        capture_date, capture_time = get_img_metadata(image_path)
+        for tags in frame_annotation.tags:
+            label = tags.label
+            f.write(project+','+camera+','+image_name+','+str(capture_date)+','+str(capture_time)+','+label+'\n')
+    f.close()
 
 
 def _export_task(dst_file, task_data, save_images=False):
     with TemporaryDirectory() as temp_dir:
-        with open(osp.join(temp_dir, 'annotations.csv'), 'w') as f:
+        with open(osp.join(temp_dir, 'task_annotations.csv'), 'w') as f:
             f.write('Project name,Camera name,Image name,Date,Time,Label,\n')
             write_to_csv_task(f, task_data)
 
         make_zip_archive(temp_dir, dst_file)
 
 
-# def _export_project(dst_file: str, project_data: ProjectData, save_images: bool=False):
-#      with TemporaryDirectory() as temp_dir:
-#          with open(osp.join(temp_dir, 'annotations.xml'), 'wb') as f:
-#             f.write('Project name,Camera name,Image name,Date,Time/n,\n')
-#             write_to_csv_project(f, project_data)
+def _export_project(dst_file: str, project_data: ProjectData, save_images: bool=False):
+     with TemporaryDirectory() as temp_dir:
+        with open(osp.join(temp_dir, 'project_annotations.csv'), 'w') as f:
+            f.write('Project name,Camera name,Image name,Date,Time,Label,\n')
+            write_to_csv_task(f, project_data)
 
-#          make_zip_archive(temp_dir, dst_file)
+        make_zip_archive(temp_dir, dst_file)
 
 
-@exporter(name='TEST FORMAT', ext='ZIP', version='1.0')
+@exporter(name='Animal Crossing', ext='ZIP', version='1.0')
 def _export_images(dst_file, instance_data, save_images=False):
     if isinstance(instance_data, TaskData):
         _export_task(dst_file, instance_data,save_images=save_images)
 
-    # else:
-    #      _export_project(dst_file, instance_data, save_images=save_images)
+    else:
+         _export_project(dst_file, instance_data, save_images=save_images)

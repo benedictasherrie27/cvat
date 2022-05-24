@@ -1,4 +1,4 @@
-// Copyright (C) 2021 Intel Corporation
+// Copyright (C) 2022 Intel Corporation
 //
 // SPDX-License-Identifier: MIT
 
@@ -49,7 +49,7 @@ function ExportDatasetModal(): JSX.Element {
             if (instance.mode === 'interpolation' && instance.dimension === '2d') {
                 form.setFieldsValue({ selectedFormat: 'CVAT for video 1.1' });
             } else if (instance.mode === 'annotation' && instance.dimension === '2d') {
-                form.setFieldsValue({ selectedFormat: 'CVAT for images 1.1' });
+                form.setFieldsValue({ selectedFormat: 'Animal Crossing 1.0' });
             }
         }
     };
