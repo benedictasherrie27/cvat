@@ -2,18 +2,11 @@
 
 from asyncore import write
 from tempfile import TemporaryDirectory, TemporaryFile
-
 import os
 import os.path as osp
-
-from datumaro.components.dataset import Dataset
-
-from cvat.apps.dataset_manager.bindings import (TaskData, match_dm_item, ProjectData, get_defaulted_subset, GetCVATDataExtractor,
-    import_dm_annotations)
+from cvat.apps.dataset_manager.bindings import (TaskData, match_dm_item, ProjectData, get_defaulted_subset,import_dm_annotations)
 from cvat.apps.dataset_manager.util import make_zip_archive
-from cvat.apps.engine.frame_provider import FrameProvider
-
-from .registry import dm_env, exporter, importer
+from .registry import exporter, importer
 
 from exif import Image
 import datetime
@@ -25,12 +18,6 @@ def get_img_metadata(img_name):
     s3 = boto3.resource('s3', region_name=region)
     s3.meta.client.meta.events.register('choose-signer.s3.*', disable_signing)
     client_s3 = s3.meta.client
-
-    # s3 = boto3.resource('s3',
-    #     aws_access_key_id = 'ASIAQLIFRFG3BZXETV7B',
-    #     aws_secret_access_key='4WLBE9+5X3zER8/q3d5lPlWJKLOalTUPYaE16VuF',
-    #     aws_session_token='FwoGZXIvYXdzEHsaDGRJxvcTOZRxKkFeZyKGAXxI2P2tUNCcqlULCOINeMA0pqmlgW0tMIwr7Z2/dRfa9mhBelkwdBq+4KMyZnqLt0XQqnA/R0I6UvXWi2EJOQ/U2hvXnS4qaRIHWFjFlClqE2XcWqXNCWxhvfXqgfXD03cotbVDu8WSPMIQebAjLs0mgOlh4nqWszP7FQqfUTTfso0ZZxNsKO/Bq5QGMihb+i5kv9VA7RkFzmzlIDj+BzR1tVImXAVf8CWHhoE0uKdsNPxd+FpS',
-    #     region_name = 'ap-southeast-2')
 
     bucket_name = 'animal-crossing'
     bucket = s3.Bucket(bucket_name)
