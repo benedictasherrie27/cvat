@@ -12,23 +12,28 @@ Requirements:
 2. Select **AC_CVAT** as a Source template. In the _Key pair (login)_ section, select your own key pair name, or click **Create new key pair**. Make sure to save this key pair so you can connect to your instance later on. Click '_Launch template_'.
 
 3. Connect to your EC2 instance by entering the following command on your terminal:
-
+```
     $ ssh -i /path/my-key-pair.pem my-instance-user-name@my-instance-public-ipv4-dns-name
-
+```
 For example, to connect to the current Animal Crossing EC2 instance, use the following:
+```
     $ ssh -i /path/my-key-pair.pem ubuntu@ec2-54-252-18-255.ap-southeast-2.compute.amazonaws.com
+```
 To find out your instance's Public IPv4 DNS, you can look at your instance summary in the AWS EC2 console.
 
 4. Once you're connected to the instance, create a virtual environment and activate it.
+```
     $ pip install virtualenv
     $ virtualenv your-venv-name
     $ source path/to/your-venv-name/bin/activate
+```
 
 ### 2. CVAT Installation on EC2
 
 1. To start, please have the terminal for the EC2 instance open.
 
 2. Type the commands below into the terminal to install Docker.
+```
     $ sudo apt-get update
     $ sudo apt-get --no-install-recommends install -y \
         apt-transport-https \
@@ -43,30 +48,43 @@ To find out your instance's Public IPv4 DNS, you can look at your instance summa
         stable"
     $ sudo apt-get update
     $ sudo apt-get --no-install-recommends install -y docker-ce docker-ce-cli containerd.io
+```
 
 3. Enter the following to run docker without root permissions.
+```
     $ sudo groupadd docker
     $ sudo usermod -aG docker $USER
+```
 Log out and log back in so that your group membership is re-evaluated. You can type in `groups` command in the terminal and check if `docker` is in its output.
 
 4. Next, use the following commands to install docker-compose. This is used for defining and running multi-container docker applications.
+```
     $ sudo apt-get --no-install-recommends install -y python3-pip python3-setuptools
     $ sudo python3 -m pip install setuptools docker-compose
+```
 
 5. Clone the CVAT source code from this [GitHub repository](https://github.com/benedictasherrie27/cvat).
+```
     $ sudo apt-get --no-install-recommends install -y git
     $ git clone https://github.com/benedictasherrie27/cvat.git
     $ cd cvat
+```
 
 6. To access CVAT using the IPv4 address that the EC2 instance has, export the `CVAT_HOST` environment variable.
+```
     $ export CVAT_HOST=your-ipv4-address
+```
 
 7. To run the docker containers with the changes made to the CVAT source code, use the following command:
+```
     $ docker-compose -f docker-compose.yml -f docker-compose.dev.yml build
     $ docker-compose up -d
+```
 To run the docker containers according to the latest CVAT release from [openvinotoolkit](https://github.com/openvinotoolkit/cvat), run the following command instead:
+```
     $ docker-compose build
     $ docker-compose up -d
+```
 
 ## Making Changes to CVAT
 
