@@ -4,6 +4,8 @@
 - About Animal Crossing Project
 - Deployment of CVAT on EC2 instance from scratch
 - Making Modifications to CVAT for Animal Crossing
+- AWS S3 Bucket Setup
+- AWS Lambda Setup
 
 ## About Animal Crossing Project by WSP Digital Data Science
 
@@ -14,6 +16,8 @@ Components for the Project:
 - **CVAT hosted on EC2 instance**, source code can be found [here](https://github.com/benedictasherrie27/cvat).
 - **AWS Lambda functions**, scripts can be found on the [animal-crossing Bitbucket](https://bitbucket.org/wspdigital/animal_crossing/src/master/Pipeline/).
 - **AWS S3 buckets**, for storing the images.
+
+To access the CVAT used for Animal Crossing, go to http://54.252.18.255:8080/.
 
 Contacts:
 - David Rawlinson (david.rawlinson@wsp.com), Supervisor and Lead Data Scientist
@@ -28,7 +32,7 @@ Requirements:
 
 ### A. EC2 Instance Creation
 
-1. Log into your AWS account and go into the EC2 console. Go to _Instances_ and click '_Launch instance from template_' on the top right corner of the screen.
+1. Log into your AWS account and go into the [EC2 console](https://ap-southeast-2.console.aws.amazon.com/ec2/v2/home?region=ap-southeast-2#Home:). Go to _Instances_ and click '_Launch instance from template_' on the top right corner of the screen.
 
 2. Select **AC_CVAT** as a Source template. In the _Key pair (login)_ section, select your own key pair name, or click _Create new key pair_. Make sure to save this key pair so you can connect to your instance later on. Click '_Launch template_'.
 
@@ -131,3 +135,15 @@ In the source code, there is a folder `cvat-ui` which contains all the different
 1. Make a new python script under `cvat/apps/dataset_manager/formats` directory. This can consist of functions or classes decorated with `importer` or `exporter` from `registry.py`.
 2. Add an import statement to the end of `cvat/apps/dataset_manager/formats/registry.py`.
 Read more on [how to add a new annotation format support](https://openvinotoolkit.github.io/cvat/docs/contributing/new-annotation-format/).
+
+## AWS S3 Bucket Setup
+
+1. Go to the [AWS S3 console](https://s3.console.aws.amazon.com/s3/buckets?region=ap-southeast-2). Click '_Create bucket_'.
+
+2. In the '_Copy settings from existing bucket_' option, choose the **animal-crossing** bucket.
+
+3. Click '_Create bucket_'.
+
+## AWS Lambdas Setup
+
+To be continued .....
