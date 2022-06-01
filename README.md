@@ -1,15 +1,36 @@
 # Computer Vision Annotation Tool (CVAT) for Animal Crossing
 
-## Deployment of CVAT on EC2 instance
+## What this README covers
+- About Animal Crossing Project
+- Deployment of CVAT on EC2 instance from scratch
+- Making Modifications to CVAT for Animal Crossing
+
+## About Animal Crossing Project by WSP Digital Data Science
+
+Objective:
+- To help the WSP Environment Team easily annotate and maintain their images.
+
+Components for the Project:
+- **CVAT hosted on EC2 instance**, source code can be found [here](https://github.com/benedictasherrie27/cvat).
+- **AWS Lambda functions**, scripts can be found on the [animal-crossing Bitbucket](https://bitbucket.org/wspdigital/animal_crossing/src/master/Pipeline/).
+- **AWS S3 buckets**, for storing the images.
+
+Contacts:
+- David Rawlinson (david.rawlinson@wsp.com), Supervisor and Lead Data Scientist
+- Christine Seeliger (christine.seeliger@wsp.com), Senior Data Scientist
+- Benedicta Sherrie (benedicta.sherrie@wsp.com), Data Science IBL Intern Jan-Jun 2022
+- Zijin Chen (zijin.chen@wsp.com), Data Science IBL Intern Jan-Jun 2022
+
+## Deployment of CVAT on EC2 instance from scratch
 
 Requirements:
 - You will need an AWS account. Contact Christine Seeliger (christine.seeliger@wsp.com) to help you get one.
 
-### 1. EC2 Instance Creation
+### A. EC2 Instance Creation
 
 1. Log into your AWS account and go into the EC2 console. Go to _Instances_ and click '_Launch instance from template_' on the top right corner of the screen.
 
-2. Select **AC_CVAT** as a Source template. In the _Key pair (login)_ section, select your own key pair name, or click **Create new key pair**. Make sure to save this key pair so you can connect to your instance later on. Click '_Launch template_'.
+2. Select **AC_CVAT** as a Source template. In the _Key pair (login)_ section, select your own key pair name, or click _Create new key pair_. Make sure to save this key pair so you can connect to your instance later on. Click '_Launch template_'.
 
 3. Connect to your EC2 instance by entering the following command on your terminal:
 ```
@@ -28,7 +49,7 @@ To find out your instance's Public IPv4 DNS, you can look at your instance summa
     $ source path/to/your-venv-name/bin/activate
 ```
 
-### 2. CVAT Installation on EC2
+### B. CVAT Installation on EC2
 
 1. To start, please have the terminal for the EC2 instance open.
 
@@ -86,7 +107,9 @@ To run the docker containers according to the latest CVAT release from [openvino
     $ docker-compose up -d
 ```
 
-## Making Changes to CVAT
+8. To access your EC2-hosted CVAT by going to the following: http://your-ipv4-address:8080/.
+
+## Making Modifications to CVAT for Animal Crossing
 
 For any of the following changes to take effect, you should always bring Docker down first, and then rebuild it.
     $ docker-compose down
