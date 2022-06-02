@@ -5,7 +5,10 @@
 - Deployment of CVAT on EC2 instance from scratch
 - Making Modifications to CVAT for Animal Crossing
 - AWS S3 Bucket Setup
-- AWS Lambda Setup
+- AWS Lambdas Setup
+    - Onedrive-S3
+    - Day-night-sorting
+    - CVAT-taskhandling
 
 ## About Animal Crossing Project by WSP Digital Data Science
 
