@@ -118,6 +118,14 @@ docker-compose up -d
 
 ## Making Modifications to CVAT for Animal Crossing
 
+**Information on the Current Animal Crossing AWS EC2 instance**
+- Name: `CVAT_animalcrossing`
+- Region: `ap-southeast-2`
+- IPv4 Address: `54.252.18.255`
+- CVAT link: http://54.252.18.255:8080/
+
+To make any changes to the CVAT on the EC2 instance, please edit your changes to the source code locally first, then do a `git push` to push all your code changes into Git. Then, you can `ssh` into the EC2 instance, do a `git pull` to bring all the code changes there.
+
 For any of the following changes to take effect, you should always bring Docker down first, and then rebuild it.
 ```
 docker-compose down
