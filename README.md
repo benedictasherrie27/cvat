@@ -114,7 +114,7 @@ docker-compose build
 docker-compose up -d
 ```
 
-8. To access your EC2-hosted CVAT by going to the following: http://your-ipv4-address:8080/.
+8. To access your EC2-hosted CVAT by going to the following: http://your-ipv4-address:8080/. NOTE: Please wait a few minutes if a 'Bad Gateway' error pops up in the newly run CVAT website. This should clear up within a few minutes and you would be able to log in after.
 
 ## Making Modifications to CVAT for Animal Crossing
 
@@ -150,6 +150,20 @@ Read more on [how to add a new annotation format support](https://openvinotoolki
 
 3. Click '_Create bucket_'.
 
+### S3 Buckets Used for Animal Crossing
+
+3 separate buckets were created for the Animal Crossing project:
+
+- `animal-crossing` bucket
+    - Purpose: where all the day/night sorting of images occur, and where the CVAT refers to for the images used for tasks. The AWS lambda functions will write into/read from this bucket.
+    - Region: `ap-southeast-2`
+- `animal-crossing-upload` bucket
+    - Purpose: a bucket where the Ecology team member can upload their images into. The AWS Lambda functions will NOT touch this bucket.
+    - Region: `ap-southeast-2`
+- `animal-crossing-backup` bucket
+    - Purpose: where the image backups are stored in the form of S3 Glacier
+    - Region: `ap-southeast-2`
+
 ## AWS Lambdas Setup
 
 3 separate Lambda functions were created for the Animal Crossing annotation Pipeline. In the order of the workflow, these are the following:
@@ -184,7 +198,7 @@ Source code: https://bitbucket.org/wspdigital/animal_crossing/src/master/Pipelin
 
 ### Day-night-sorting Lambda
 
-Aim: To sort incoming images from `/inbox` directory into `/day` or `/night` directories every 20 minutes in AWS S3 `animal-crossing` bucket, with the addition of backing up those images to `animal-crossing-backup`.
+Aim: To sort incoming images from `/inbox` directory into `/images/day` or `/images/night` directories every 20 minutes in AWS S3 `animal-crossing` bucket, with the addition of backing up those images to `animal-crossing-backup`.
 
 AWS Region where it was set up: `ap-southeast-2`
 
