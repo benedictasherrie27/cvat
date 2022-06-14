@@ -3,11 +3,14 @@
 ## What this README covers
 - About Animal Crossing Project
 - Deployment of CVAT on EC2 instance from scratch
+- Adding new users to CVAT
 - Making Modifications to CVAT for Animal Crossing
 - AWS S3 Bucket Setup
 - AWS Lambdas Setup
-    - Onedrive-S3
+    - WorkmailToS3
+    - StructureCheck
     - Day-night-sorting
+    - Manifest
     - CVAT-taskhandling
 
 ## About Animal Crossing Project by WSP Digital Data Science
@@ -116,6 +119,32 @@ docker-compose up -d
 
 8. To access your EC2-hosted CVAT by going to the following: http://your-ipv4-address:8080/. NOTE: Please wait a few minutes if a 'Bad Gateway' error pops up in the newly run CVAT website. This should clear up within a few minutes and you would be able to log in after.
 
+## Adding New Users to CVAT for Animal Crossing
+
+### Create a superuser account for admin purposes
+
+1. Connect to your EC2 instance via terminal.
+```
+ssh -i /path/my-key-pair.pem my-instance-user-name@my-instance-public-ipv4-dns-name
+```
+
+2. Use the following command on your terminal once connected to EC2:
+```
+docker exec -it cvat bash -ic 'python3 ~/manage.py createsuperuser'
+```
+
+3. Follow the prompts to create a superuser account. You can then log in to the CVAT using this new credentials.
+
+### Creating a normal account for new Ecology team members.
+
+1. Log in with a superuser account into the CVAT website.
+
+2. Go to the admin page: http://54.252.18.255:8080/admin/ and click `Users`
+
+3. Select `Add User +` on the top right of the page, and fill out the username and password for this new user.
+
+4. Once the new user is added, please make sure to edit the groups that the new user belongs to. Add them into the `admin` group so that they can access all the current existing projects and images for the Animal Crossing project. Adding a 'Staff status' or 'Superuser status' is optional.
+
 ## Making Modifications to CVAT for Animal Crossing
 
 **Information on the Current Animal Crossing AWS EC2 instance**
@@ -164,25 +193,29 @@ Read more on [how to add a new annotation format support](https://openvinotoolki
 
 - `animal-crossing` bucket
     - Purpose: where all the day/night sorting of images occur, and where the CVAT refers to for the images used for tasks. The AWS lambda functions will write into/read from this bucket.
-    - Region: `ap-southeast-2`
 - `animal-crossing-upload` bucket
     - Purpose: a bucket where the Ecology team member can upload their images into. The AWS Lambda functions will NOT touch this bucket.
-    - Region: `ap-southeast-2`
 - `animal-crossing-backup` bucket
     - Purpose: where the image backups are stored in the form of S3 Glacier
-    - Region: `ap-southeast-2`
 
 ## AWS Lambdas Setup
 
-3 separate Lambda functions were created for the Animal Crossing annotation Pipeline. In the order of the workflow, these are the following:
+5 separate Lambda functions were created for the Animal Crossing annotation Pipeline. In the order of the workflow, these are the following:
 
-1. **Onedrive-S3**, Lambda script can be found [here](https://bitbucket.org/wspdigital/animal_crossing/src/master/Pipeline/Onedrive-S3/).
+1. **WorkmailToS3**, Lambda script can be found [here](https://bitbucket.org/wspdigital/animal_crossing/src/master/Pipeline/Workmail-to-S3/).
+    - NOTE: This lambda is currently INACTIVE because Power Automate did not end up getting used to send images from Onedrive to Workmail.
 
-2. **Day-night-sorting**, Lambda script can be found [here](https://bitbucket.org/wspdigital/animal_crossing/src/master/Pipeline/Day-night-sorting/Lambda/).
+2. **StructureCheck**, Lambda script can be found [here](https://bitbucket.org/wspdigital/animal_crossing/src/master/Pipeline/Structure-check/)
 
-3. **CVAT-taskhandling**, Lambda scripts can be found [here](https://bitbucket.org/wspdigital/animal_crossing/src/master/Pipeline/CVAT-taskhandling/lambda/).
+3. **Day-night-sorting**, Lambda script can be found [here](https://bitbucket.org/wspdigital/animal_crossing/src/master/Pipeline/Day-night-sorting/Lambda/).
 
-### Onedrive-S3 Lambda
+4. **Manifest**, Lambda script can be found [here](https://bitbucket.org/wspdigital/animal_crossing/src/master/Pipeline/Manifest-handling/)
+
+5. **CVAT-taskhandling**, Lambda scripts can be found [here](https://bitbucket.org/wspdigital/animal_crossing/src/master/Pipeline/CVAT-taskhandling/lambda/).
+
+### WorkmailToS3 Lambda
+
+NOTE: This is all currently INACTIVE. This is a how to guide on how to activate it.
 
 Aim: to process the email received from Microsoft Onedrive once an image has been uploaded there, and put this image into AWS S3.
 
@@ -190,7 +223,7 @@ AWS Region where it was set up: `us-east-1`
 
 #### How to setup
 
-Source code: https://bitbucket.org/wspdigital/animal_crossing/src/master/Pipeline/Onedrive-S3/
+Source code: https://bitbucket.org/wspdigital/animal_crossing/src/master/Pipeline/Workmail-to-S3/
 
 1. Create a Lambda function from scratch, with a runtime of Python 3.9, and architecture of x86_64. Select '_Use an existing role_' for the Execution role section, and choose 'AC_SEStoS3'.
 
@@ -204,10 +237,68 @@ Source code: https://bitbucket.org/wspdigital/animal_crossing/src/master/Pipelin
     - Choose 'Run Lambda' under the 'Action' settings.
     - Make sure to specify the 'Sender domains or addresses' and 'Destination domains or addresses' sections.
 
+### StructureCheck Lambda
+
+Aim: to check the structure of folders uploaded into `animal-crossing-upload` bucket, and move the images into `animal-crossing` bucket every 15 minutes.
+
+Current Active Lambda Name: `AC_StructureCheck`
+AWS Region where it was set up: `ap-southeast-2`
+
+#### How to setup
+
+Source code: https://bitbucket.org/wspdigital/animal_crossing/src/master/Pipeline/Structure-check/
+
+1. Create a Lambda function from scratch, with a runtime of Python 3.9, and architecture of x86_64. Select '_Use an existing role_' for the Execution role section, and choose 'lambda_role'.
+
+2. Next, we want to deploy package with dependencies for the Lambda script. Refer to this [link](https://docs.aws.amazon.com/lambda/latest/dg/python-package.html#python-package-create-package-with-dependency) for more information.
+
+    - In your local computer terminal, create a project directory named whatever you like. For example for macOS:
+    ```
+    mkdir directory-name
+    ```
+    - Navigate to the recently made directory.
+    ```
+    cd directory-name
+    ```
+    - Copy the contents found in the source code link and save it in a new file named `lambda_function.py`. Paste the code into this newly created file, and save it.
+    ```
+    nano lambda_function.py
+    ```
+    - Install the required libraries to a new package directory.
+    ```
+    pip install --target ./package exif
+    pip install --target ./package datetime
+    ```
+    - Create a deployment package with the installed library at the root.
+    ```
+    cd package
+    zip -r ../my-deployment-package.zip .
+    ```
+    - Add the `lambda_function.py` file to the root of the zip file.
+    ```
+    cd ..
+    zip -g my-deployment-package.zip lambda_function.py
+    ```
+
+3. On the AWS Lambda console for the function you created earlier, click '_Upload from_' and select '_.zip file_'. Upload the file named my-deployment-package.zip, which you created in the previous step.
+
+4. Edit the timeout settings to **15 minutes** under the **General Configuration** section.
+
+5. Next, create a rule to run the Lambda function on a schedule.
+    - Go to https://console.aws.amazon.com/cloudwatch/
+    - In the navigation pane, choose '_Events_' --> '_Rule_' and click '_Back to CloudWatch Events_'.
+    - Click '_Create rule_'
+    - Select '_Schedule_' and set '_Fixed rate of_' to **15 minutes**.
+    - For the '_Targets_' section, select '_Lambda function_' and choose the name of the function you just created so that it is triggered by this rule.
+    - NOTE: an existing rule called 'ac_structurecheck_trigger' was already created to trigger the current lambda function.
+
+6. You can see the rule once you created it. You can disable it by clicking '_Actions_' and select '_Disable_'.
+
 ### Day-night-sorting Lambda
 
-Aim: To sort incoming images from `/inbox` directory into `/images/day` or `/images/night` directories every 20 minutes in AWS S3 `animal-crossing` bucket, with the addition of backing up those images to `animal-crossing-backup`.
+Aim: To sort incoming images from `/inbox` directory into `/images/day` or `/images/night` directories every 15 minutes in AWS S3 `animal-crossing` bucket, with the addition of backing up those images to `animal-crossing-backup`.
 
+Current Active Lambda Name: `Classify_images`
 AWS Region where it was set up: `ap-southeast-2`
 
 #### How to setup
@@ -255,15 +346,43 @@ Source code: https://bitbucket.org/wspdigital/animal_crossing/src/master/Pipelin
     - Go to https://console.aws.amazon.com/cloudwatch/
     - In the navigation pane, choose '_Events_' --> '_Rule_' and click '_Back to CloudWatch Events_'.
     - Click '_Create rule_'
-    - Select '_Schedule_' and set '_Fixed rate of_' to **20 minutes**.
+    - Select '_Schedule_' and set '_Fixed rate of_' to **15 minutes**.
     - For the '_Targets_' section, select '_Lambda function_' and choose the name of the function you just created so that it is triggered by this rule.
     - NOTE: an existing rule called 'schedule_classify_images' was already created to trigger the current lambda function.
 
 6. You can see the rule once you created it. You can disable it by clicking '_Actions_' and select '_Disable_'.
 
+### Manifest Lambda
+
+Aim: To update the manifest files of each folder in the S3 bucket, according to day/night filter configuration. This is set to be done every 15 minutes.
+
+Current Active Lambda Name: `AC_Manifest`
+AWS Region where it was set up: `ap-southeast-2`
+
+#### How to setup
+
+1. Create a Lambda function from scratch, with a runtime of Python 3.8, and architecture of x86_64. Select 'Use an existing role' for the Execution role section, and choose 'AC_CVATTasks'.
+
+2. Copy the files found in the source code link into the lambda function code. Note that there are 3 separate files, please keep each file's name the same as the ones found in the source code. Click 'Deploy' once all code is added.
+
+3. Next, we want to add 2 layers to the Lambda function. This will provide the external Python libraries required for the lambda to run.
+    - To add a layer, go to the 'Layers' section of the lambda, and click 'Add layer'. Choose 'Specify an ARN' and input the following ARNs:
+        - Python Pillow module: `arn:aws:lambda:ap-southeast-2:770693421928:layer:Klayers-python38-Pillow:15`
+        - Python requests module: `arn:aws:lambda:ap-southeast-2:770693421928:layer:Klayers-python38-requests:28`
+        - Note: these may not be the latest ARN for the modules above. Please check [here](https://github.com/keithrozario/Klayers/blob/master/deployments/python3.8/arns/ap-southeast-2.csv) for the latest ones.
+
+4. Edit the timeout settings to **15 minutes** under the **General Configuration** section.
+
+5. Add an EventBridge trigger rule.
+    - Click 'Add trigger'
+    - Choose 'EventBridge (CloudWatch Events)' for the trigger.
+    - You can either:
+        - Create a new rule. Please refer to this [link](https://docs.aws.amazon.com/lambda/latest/dg/services-cloudwatchevents-expressions.html) if you want to write your own schedule expression.
+        - Use an existing rule called `ac_manifest_trigger`, which is set to trigger the lambda every 15 minutes.
+
 ### CVAT-taskhandling Lambda
 
-Aim: To update the manifest files of each `/night` folders in the S3 bucket, and to (re-)create CVAT tasks with an expanded number of images. This is set to be done every day at 8 am AEST.
+Aim: To (re-)create CVAT tasks with an expanded number of images. This is set to be done every day at 8 am AEST.
 
 AWS Region where it was set up: `ap-southeast-2`
 
