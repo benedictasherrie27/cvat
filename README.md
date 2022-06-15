@@ -23,7 +23,7 @@ Components for the Project:
 - **AWS Lambda functions**, scripts can be found on the [animal-crossing Bitbucket](https://bitbucket.org/wspdigital/animal_crossing/src/master/Pipeline/).
 - **AWS S3 buckets**, for storing the images.
 
-To access the CVAT used for Animal Crossing, go to http://54.252.18.255:8080/.
+To access the CVAT used for Animal Crossing, go to http://54.252.18.255/.
 
 Please contact any of the following for any queries:
 - David Rawlinson (david.rawlinson@wsp.com), Supervisor and Lead Data Scientist
@@ -34,7 +34,7 @@ Please contact any of the following for any queries:
 ## Deployment of CVAT on EC2 instance from scratch
 
 Requirements:
-- You will need an AWS account. Contact Christine Seeliger (christine.seeliger@wsp.com) to help you get one.
+- You will need an AWS user account. Contact Christine Seeliger (christine.seeliger@wsp.com) to help you get one.
 
 ### A. EC2 Instance Creation
 
@@ -117,7 +117,7 @@ docker-compose build
 docker-compose up -d
 ```
 
-8. To access your EC2-hosted CVAT by going to the following: http://your-ipv4-address:8080/. NOTE: Please wait a few minutes if a 'Bad Gateway' error pops up in the newly run CVAT website. This should clear up within a few minutes and you would be able to log in after.
+8. To access your EC2-hosted CVAT by going to the following: http://your-ipv4-address/. NOTE: Please wait a few minutes if a 'Bad Gateway' error pops up in the newly run CVAT website. This should clear up within a few minutes and you would be able to log in after.
 
 ## Adding New Users to CVAT for Animal Crossing
 
@@ -139,7 +139,7 @@ docker exec -it cvat bash -ic 'python3 ~/manage.py createsuperuser'
 
 1. Log in with a superuser account into the CVAT website.
 
-2. Go to the admin page: http://54.252.18.255:8080/admin/ and click `Users`
+2. Go to the admin page: http://54.252.18.255/admin/ and click `Users`
 
 3. Select `Add User +` on the top right of the page, and fill out the username and password for this new user.
 
@@ -151,27 +151,31 @@ docker exec -it cvat bash -ic 'python3 ~/manage.py createsuperuser'
 - Name: `CVAT_animalcrossing`
 - Region: `ap-southeast-2`
 - IPv4 Address: `54.252.18.255`
-- CVAT link: http://54.252.18.255:8080/
+- CVAT link: http://54.252.18.255/
 
 To make any changes to the CVAT on the EC2 instance, please edit your changes to the source code locally first, then do a `git push` to push all your code changes into Git. Then, you can `ssh` into the EC2 instance, do a `git pull` to bring all the code changes there.
 
 For any of the following changes to take effect, you should always bring Docker down first, and then rebuild it.
 ```
 docker-compose down
-docker system prune
 docker-compose -f docker-compose.yml -f docker-compose.dev.yml build
 docker-compose up -d
+```
+
+If you ever run out of memory when trying to rebuild Docker, use the following line before `docker-compose ... build`:
+```
+docker system prune
 ```
 
 ### To make changes to the CVAT User Interface
 
 In the source code, there is a folder `cvat-ui` which contains all the different files for the user interface. To _hide specific buttons_ from the UI, find the specific section of the code that's for the button you want to hide, comment out that section of the code and save the file. Once you have done this, please rebuild the Docker stack in the instance.
 
-### To edit the Export Format (Animal Crossing 1.0)
+### To edit the Export Format (Animal Crossing Row/Column Labels 1.0)
 
-1. Go to `cvat/apps/dataset_manager/formats/metadata.py` to edit the code according to any changes needed to be made to the exported output file.
-2. Save the changes in the file.
-3. Bring Docker down with `docker-compose down` and rebuild the Docker with the `docker-compose ... build` and `docker-compose up -d` commands.
+1. Go to `cvat/apps/dataset_manager/formats/metadata.py` for 'Animal Crossing Row Labels 1.0' format or `cvat/apps/dataset_manager/formats/metadata_col.py` for 'Animal Crossing Column Labels 1.0' format to edit the code according to any changes needed to be made to the exported output file.
+2. Save the changes in the file, and `git push` these changes into GitHub. On the EC2 instance, do a `git pull` to bring all the code changes there.
+3. On the EC2 instance, bring the Docker down with `docker-compose down` and rebuild the Docker with the `docker-compose ... build` and `docker-compose up -d` commands.
 
 ### To create a new Export Format
 
@@ -239,7 +243,7 @@ Source code: https://bitbucket.org/wspdigital/animal_crossing/src/master/Pipelin
 
 ### StructureCheck Lambda
 
-Aim: to check the structure of folders uploaded into `animal-crossing-upload` bucket, and move the images into `animal-crossing` bucket every 15 minutes.
+Aim: to check the structure of folders uploaded into `animal-crossing-upload` bucket, and move the images into the `/project/camera/inbox` folder within the `animal-crossing` bucket every 15 minutes.
 
 Current Active Lambda Name: `AC_StructureCheck`
 AWS Region where it was set up: `ap-southeast-2`
