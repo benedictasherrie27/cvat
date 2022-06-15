@@ -49,7 +49,7 @@ function ExportDatasetModal(): JSX.Element {
             if (instance.mode === 'interpolation' && instance.dimension === '2d') {
                 form.setFieldsValue({ selectedFormat: 'CVAT for video 1.1' });
             } else if (instance.mode === 'annotation' && instance.dimension === '2d') {
-                form.setFieldsValue({ selectedFormat: 'Animal Crossing 1.0' });
+                form.setFieldsValue({ selectedFormat: 'Animal Crossing Row Labels 1.0' });
             }
         }
     };
