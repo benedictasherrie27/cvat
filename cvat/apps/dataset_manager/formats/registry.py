@@ -127,4 +127,4 @@ import cvat.apps.dataset_manager.formats.lfw
 import cvat.apps.dataset_manager.formats.cityscapes
 import cvat.apps.dataset_manager.formats.openimages
 import cvat.apps.dataset_manager.formats.metadata
-import cvat.apps.dataset_manager.formats.metadata_labels
+import cvat.apps.dataset_manager.formats.metadata_col
