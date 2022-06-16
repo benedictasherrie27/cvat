@@ -23,7 +23,7 @@ Components for the Project:
 - **AWS Lambda functions**, scripts can be found on the [animal-crossing Bitbucket](https://bitbucket.org/wspdigital/animal_crossing/src/master/Pipeline/).
 - **AWS S3 buckets**, for storing the images.
 
-To access the CVAT used for Animal Crossing, go to http://54.252.18.255/.
+To access the CVAT used for Animal Crossing, go to http://54.252.18.255:8080/.
 
 Please contact any of the following for any queries:
 - David Rawlinson (david.rawlinson@wsp.com), Supervisor and Lead Data Scientist
@@ -42,7 +42,7 @@ Requirements:
 
 2. Select **AC_CVAT** as a Source template. In the _Key pair (login)_ section, select your own key pair name, or click _Create new key pair_. Make sure to save this key pair so you can connect to your instance later on. Click '_Launch template_'.
 
-3. Connect to your EC2 instance by entering the following command on your terminal:
+3. Connect to your EC2 instance by connecting to the WSP (Digital) VPN and entering the following command on your terminal:
 ```
 ssh -i /path/my-key-pair.pem my-instance-user-name@my-instance-public-ipv4-dns-name
 ```
@@ -117,7 +117,7 @@ docker-compose build
 docker-compose up -d
 ```
 
-8. To access your EC2-hosted CVAT by going to the following: http://your-ipv4-address/. NOTE: Please wait a few minutes if a 'Bad Gateway' error pops up in the newly run CVAT website. This should clear up within a few minutes and you would be able to log in after.
+8. To access your EC2-hosted CVAT, make sure you are connected to the WSP VPN and go to the following URL: http://your-ipv4-address:8080/. NOTE: Please wait a few minutes if a 'Bad Gateway' error pops up in the newly run CVAT website. This should clear up within a few minutes and you would be able to log in after.
 
 ## Adding New Users to CVAT for Animal Crossing
 
@@ -139,7 +139,7 @@ docker exec -it cvat bash -ic 'python3 ~/manage.py createsuperuser'
 
 1. Log in with a superuser account into the CVAT website.
 
-2. Go to the admin page: http://54.252.18.255/admin/ and click `Users`
+2. Go to the admin page: http://54.252.18.255:8080/admin/ and click `Users`
 
 3. Select `Add User +` on the top right of the page, and fill out the username and password for this new user.
 
@@ -151,7 +151,7 @@ docker exec -it cvat bash -ic 'python3 ~/manage.py createsuperuser'
 - Name: `CVAT_animalcrossing`
 - Region: `ap-southeast-2`
 - IPv4 Address: `54.252.18.255`
-- CVAT link: http://54.252.18.255/
+- CVAT link: http://54.252.18.255:8080/
 
 To make any changes to the CVAT on the EC2 instance, please edit your changes to the source code locally first, then do a `git push` to push all your code changes into Git. Then, you can `ssh` into the EC2 instance, do a `git pull` to bring all the code changes there.
 
@@ -384,6 +384,8 @@ AWS Region where it was set up: `ap-southeast-2`
         - Create a new rule. Please refer to this [link](https://docs.aws.amazon.com/lambda/latest/dg/services-cloudwatchevents-expressions.html) if you want to write your own schedule expression.
         - Use an existing rule called `ac_manifest_trigger`, which is set to trigger the lambda every 15 minutes.
 
+6. Under the **Configuration** tab, click **VPC**. Then, click **Edit**. For VPC, choose `Lambda_VPC`. Choose `private-one` and `private-two` for the Subnets. Choose the default Security group for VPC. Click Save. NOTE: This setting allows the lambda to run under Elastic IPs, allowing it to access the secured EC2 instance.
+
 ### CVAT-taskhandling Lambda
 
 Aim: To (re-)create CVAT tasks with an expanded number of images. This is set to be done every day at 8 am AEST.
@@ -410,3 +412,5 @@ AWS Region where it was set up: `ap-southeast-2`
     - You can either:
         - Create a new rule. Please refer to this [link](https://docs.aws.amazon.com/lambda/latest/dg/services-cloudwatchevents-expressions.html) if you want to write your own schedule expression.
         - Use an existing rule called `cvat_task_creation`, which is set to trigger the lambda everyday at 8 am AEST.
+
+6. Under the **Configuration** tab, click **VPC**. Then, click **Edit**. For VPC, choose `Lambda_VPC`. Choose `private-one` and `private-two` for the Subnets. Choose the default Security group for VPC. Click Save. NOTE: This setting allows the lambda to run under Elastic IPs, allowing it to access the secured EC2 instance.
