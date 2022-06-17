@@ -384,7 +384,7 @@ AWS Region where it was set up: `ap-southeast-2`
         - Create a new rule. Please refer to this [link](https://docs.aws.amazon.com/lambda/latest/dg/services-cloudwatchevents-expressions.html) if you want to write your own schedule expression.
         - Use an existing rule called `ac_manifest_trigger`, which is set to trigger the lambda every 15 minutes.
 
-6. Under the **Configuration** tab, click **VPC**. Then, click **Edit**. For VPC, choose `Lambda_VPC`. Choose `private-one` and `private-two` for the Subnets. Choose the default Security group for VPC. Click Save. NOTE: This setting allows the lambda to run under Elastic IPs, allowing it to access the secured EC2 instance.
+6. Under the **Configuration** tab, click **VPC**. Then, click **Edit**. For VPC, choose `Lambda_VPC`. Choose `private-one` and `private-two` for the Subnets. Choose the `Lambda_VPC_sg` for the Security group. Click Save. NOTE: This setting allows the lambda to run under Elastic IPs, allowing it to access the secured EC2 instance.
 
 ### CVAT-taskhandling Lambda
 
@@ -413,4 +413,4 @@ AWS Region where it was set up: `ap-southeast-2`
         - Create a new rule. Please refer to this [link](https://docs.aws.amazon.com/lambda/latest/dg/services-cloudwatchevents-expressions.html) if you want to write your own schedule expression.
         - Use an existing rule called `cvat_task_creation`, which is set to trigger the lambda everyday at 8 am AEST.
 
-6. Under the **Configuration** tab, click **VPC**. Then, click **Edit**. For VPC, choose `Lambda_VPC`. Choose `private-one` and `private-two` for the Subnets. Choose the default Security group for VPC. Click Save. NOTE: This setting allows the lambda to run under Elastic IPs, allowing it to access the secured EC2 instance.
+6. Under the **Configuration** tab, click **VPC**. Then, click **Edit**. For VPC, choose `Lambda_VPC`. Choose `private-one` and `private-two` for the Subnets. Choose the `Lambda_VPC_sg` for the Security group. Click Save. NOTE: This setting allows the lambda to run under Elastic IPs, allowing it to access the secured EC2 instance.
