@@ -16,9 +16,11 @@
 ## About Animal Crossing Project by WSP Digital Data Science
 
 Objective:
+
 - To help the WSP Environment Team easily annotate and maintain their images.
 
 Components for the Project:
+
 - **CVAT hosted on EC2 instance**, source code can be found [here](https://github.com/benedictasherrie27/cvat).
 - **AWS Lambda functions**, scripts can be found on the [animal-crossing Bitbucket](https://bitbucket.org/wspdigital/animal_crossing/src/master/Pipeline/).
 - **AWS S3 buckets**, for storing the images.
@@ -26,6 +28,7 @@ Components for the Project:
 To access the CVAT used for Animal Crossing, go to http://54.252.18.255:8080/.
 
 Please contact any of the following for any queries:
+
 - David Rawlinson (david.rawlinson@wsp.com), Supervisor and Lead Data Scientist
 - Christine Seeliger (christine.seeliger@wsp.com), Senior Data Scientist
 - Benedicta Sherrie (benedicta.sherrie@wsp.com), Data Science IBL Intern Jan-Jun 2022
@@ -34,6 +37,7 @@ Please contact any of the following for any queries:
 ## Deployment of CVAT on EC2 instance from scratch
 
 Requirements:
+
 - You will need an AWS user account. Contact Christine Seeliger (christine.seeliger@wsp.com) to help you get one.
 
 ### A. EC2 Instance Creation
@@ -148,6 +152,7 @@ docker exec -it cvat bash -ic 'python3 ~/manage.py createsuperuser'
 ## Making Modifications to CVAT for Animal Crossing
 
 **Information on the Current Animal Crossing AWS EC2 instance**
+
 - Name: `CVAT_animalcrossing`
 - Region: `ap-southeast-2`
 - IPv4 Address: `54.252.18.255`
